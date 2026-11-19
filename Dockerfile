@@ -13,14 +13,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Runtime dirs for MariaDB and Tomcat temp
-RUN mkdir -p /var/run/mysqld /var/log/mysql /usr/share/tomcat10/temp \
-    && chown -R mysql:mysql /var/run/mysqld /var/log/mysql
+RUN mkdir -p /var/run/mysqld /var/log/mysql /usr/share/tomcat10/temp /etc/tomcat10/conf \
+    && chown -R mysql:mysql /var/run/mysqld /var/log/mysql \
+    && ln -sf ../server.xml /etc/tomcat10/conf/server.xml \
+    && ln -sf ../web.xml /etc/tomcat10/conf/web.xml \
+    && ln -sf ../context.xml /etc/tomcat10/conf/context.xml \
+    && ln -sf ../tomcat-users.xml /etc/tomcat10/conf/tomcat-users.xml
 
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Optional: deploy WAR as ROOT app
-COPY index.html /var/lib/tomcat10/webapps/ROOT/index.html
+# Optional: deploy WAR as ROOT app (CATALINA_BASE=/etc/tomcat10)
+COPY index.html /etc/tomcat10/webapps/ROOT/index.html
 
 EXPOSE 8080 3306
 
