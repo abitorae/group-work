@@ -19,7 +19,7 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Optional: deploy WAR as ROOT app
-# COPY app.war /var/lib/tomcat10/webapps/ROOT.war
+COPY index.html /var/lib/tomcat10/webapps/ROOT/index.html
 
 EXPOSE 8080 3306
 
