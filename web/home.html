@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>主页</title>
+    <style>
+        body { font-family: sans-serif; display:flex; justify-content:center; padding-top:100px; }
+        .card { border:1px solid #ccc; padding:24px; width:280px; border-radius:8px; text-align:center; }
+        a { display:inline-block; margin-top:16px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2 id="welcome">登录成功</h2>
+    <p>主页有待开发</p>
+    <a href="index.html">退出登录</a>
+</div>
+
+<script>
+// LoginServlet 登录成功后跳转到本页并带上 ?user=用户名
+const user = new URLSearchParams(location.search).get('user');
+if (user) {
+    document.getElementById('welcome').textContent = `登录成功，欢迎 ${user}`;
+}
+</script>
+</body>
+</html>
