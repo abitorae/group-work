@@ -1,3 +1,12 @@
+# ---------- Stage 1: 用 Maven 编译打包 ----------
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /build
+COPY pom.xml ./
+COPY src/ src/
+COPY web/ web/
+RUN --mount=type=cache,target=/root/.m2 mvn -B -ntp -DskipTests package
+
+# ---------- Stage 2: 运行时镜像 ----------
 FROM debian:trixie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -21,10 +30,11 @@ RUN mkdir -p /var/run/mysqld /var/log/mysql /usr/share/tomcat10/temp /etc/tomcat
     && ln -sf ../tomcat-users.xml /etc/tomcat10/conf/tomcat-users.xml
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
-# Optional: deploy WAR as ROOT app (CATALINA_BASE=/etc/tomcat10)
-COPY index.html /etc/tomcat10/webapps/ROOT/index.html
+# 部署 Maven 打出的 ROOT 应用（含 Servlet class 与依赖 jar）
+RUN rm -rf /etc/tomcat10/webapps/ROOT
+COPY --from=build /build/target/ROOT /etc/tomcat10/webapps/ROOT
 
 EXPOSE 8080 3306
 

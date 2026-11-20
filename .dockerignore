@@ -1,0 +1,8 @@
+# 构建上下文排除项：这些都不需要进入镜像构建
+.git
+.github
+.idea
+target
+out
+web/WEB-INF/classes
+*.patch
