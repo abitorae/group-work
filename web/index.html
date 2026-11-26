@@ -10,34 +10,23 @@
         label { display:block; margin:8px 0 4px; }
         input { width:100%; padding:8px; box-sizing:border-box; }
         button { width:100%; padding:10px; margin-top:16px; }
-        #msg { margin-top:12px; text-align:center; }
+        #msg { margin-top:12px; text-align:center; color:red; }
     </style>
 </head>
 <body>
-<form onsubmit="return check()">
+<form action="login" method="post">
     <h2>用户登录</h2>
-    <label>用户名</label>
+    <label for="u">用户名</label>
     <input id="u" name="username">
-    <label>密码</label>
+    <label for="p">密码</label>
     <input id="p" type="password" name="password">
     <button type="submit">登录</button>
     <p id="msg"></p>
 </form>
 
 <script>
-function check() {
-    var u = document.getElementById('u').value;
-    var p = document.getElementById('p').value;
-    var msg = document.getElementById('msg');
-    // 纯前端假验证：admin / 123456
-    if (u === 'admin' && p === '123456') {
-        msg.textContent = '登录成功，欢迎 ' + u;
-        msg.style.color = 'green';
-    } else {
-        msg.textContent = '用户名或密码错误';
-        msg.style.color = 'red';
-    }
-    return false; // 阻止表单真实提交
+if (new URLSearchParams(location.search).get('error')) {
+    document.getElementById('msg').textContent = '用户名或密码错误';
 }
 </script>
 </body>
